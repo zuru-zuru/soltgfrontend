@@ -292,7 +292,12 @@ def command_executer_docker_solcmc(command, timeout, file):
 
 def test_1(updated_file_name):
     global SANDBOX_DIR
-    command = [COMP_PATH, '--model-checker-solvers=smtlib2', '--model-checker-engine=chc', "--model-checker-print-query", updated_file_name]
+    command = [COMP_PATH, 
+               '--model-checker-solvers=smtlib2', 
+               '--model-checker-engine=chc', 
+               "--model-checker-print-query",
+               "--model-checker-ext-calls=trusted",
+               updated_file_name]
     command_executer_err(command, 120, SANDBOX_DIR + '/log_test.txt', SANDBOX_DIR + '/help.txt')
     
 
@@ -573,18 +578,19 @@ def run_test(file, signature):
     # copy source file to "scr"
     local_path = os.getcwd()
     print(local_path + "/src/" + basename)
-    # shutil.copyfile(file, local_path + "/src/" + basename)
+    os.makedirs(local_path + "/src/", exist_ok=True)
+    shutil.copyfile(file, local_path + "/src/" + basename)
     #run command:  forge test --match name
     SANDBOX_DIR = os.path.abspath(SANDBOX_DIR)
     logger(SANDBOX_DIR + "/log.txt", "new signature" + str(signature))
     #os.chdir("../")
     os.chdir(local_path)
     command_executer([FORGE_PATH, 'clean'], 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/log.txt")
-    command = [FORGE_PATH, 'test', '--match', str(os.path.splitext(basename)[0])]
+    command = [FORGE_PATH, 'test',  str(os.path.splitext(basename)[0])]
     command_executer(command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/test_results.txt")
-    command = [FORGE_PATH, 'coverage', '--match', str(os.path.splitext(basename)[0]), '--report', 'lcov']
+    command = [FORGE_PATH, 'coverage',  str(os.path.splitext(basename)[0]), '--report', 'lcov']
     command_executer(command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/test_results.txt")
-    command = [FORGE_PATH, 'coverage', '--match', str(os.path.splitext(basename)[0]), '--report', 'summary']
+    command = [FORGE_PATH, 'coverage', str(os.path.splitext(basename)[0]), '--report', 'summary']
     command_executer(command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/test_results.txt")
     #copy lcov file
     if os.path.isfile("lcov.info"):
@@ -592,8 +598,8 @@ def run_test(file, signature):
         genhtml_report_command = ['genhtml', '--branch-coverage', '--output', SANDBOX_DIR + '/generated-coverage', SANDBOX_DIR + "/lcov.info"]
         command_executer(genhtml_report_command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/log.txt")
     os.chdir(save)
-    #os.remove("../src/" + basename)
-    # clean_dir(local_path + "/src")
+    os.remove(local_path + "/src/" + basename)
+    clean_dir(local_path + "/src")
     shutil.move(local_path + "/test/" + os.path.splitext(basename)[0] + ".t.sol",
                 SANDBOX_DIR + "/" + os.path.splitext(basename)[0] + ".t.sol")
     # clean_dir(local_path + "/test")
@@ -612,8 +618,7 @@ def main(filename, timeout):
     start_time = time.time()
     init()
     global ADT_DIR, SOLCMC, CORE, ADT_DIR, TIMEOUT, SOLVER_TYPE, SANDBOX_DIR, TG_PATH, TG_TIMEOUT, FORGE_PATH
-    # TG_TIMEOUT = float(timeout)
-    TG_TIMEOUT = 10
+    TG_TIMEOUT = float(timeout)
     print(f"TIMEOUT {timeout}")
     if not filename:
         parser = argparse.ArgumentParser(description='python script for Solidity Test Generation')
