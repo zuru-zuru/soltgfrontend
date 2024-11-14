@@ -169,7 +169,12 @@ def command_executer(command, timeout, log_file, output_file):
         else:
             return True
         
-def getDGraphFromOutput(stdout, contract_name):
+def getDGraphFromOutput(graph_file, contract_name):
+    stdout = ''
+    with open(graph_file, 'rb') as file:
+        str_lines = [str(b)[2:-1] for b in file.readlines()]
+        print(str_lines)
+        stdout = ''.join(str_lines)
     dgraphs = str(stdout).split('(DEPENDANCY-GRAPH-DELIMITER)')
     
     for graph_block in dgraphs:
@@ -177,10 +182,28 @@ def getDGraphFromOutput(stdout, contract_name):
             found = False
             for dgraph in graph_block.split('(CONTRACT-NAME-DELIMTER)'):
                 if found:
-                    return dgraph
+                    return str(dgraph)
                 if dgraph == contract_name:
                     found = True
 
+def getDGraphsFromOutput(stdout):
+    dgraphs = str(stdout).split('(DEPENDANCY-GRAPH-DELIMITER)')
+    s = ''
+    for graph_block in dgraphs:
+        if ('(CONTRACT-NAME-DELIMTER)') in graph_block:
+            print(graph_block)
+            s = s + '(DEPENDANCY-GRAPH-DELIMITER)'
+            s = s + graph_block
+            s = s + '(DEPENDANCY-GRAPH-DELIMITER)'
+            # found = False
+            # for dgraph in graph_block.split('(CONTRACT-NAME-DELIMTER)'):
+            #     if found:
+            #         return dgraph
+            #     if dgraph == contract_name:
+            #         found = True
+    # print(s)
+    # exit()
+    return str(s)
 
 def command_executer_comp(command, timeout, file, contract_name):
     # os.chdir(SANDBOX_DIR)
@@ -214,9 +237,9 @@ def command_executer_comp(command, timeout, file, contract_name):
             start = False
             out = []
             
-            dGraph = getDGraphFromOutput(stdout, contract_name)
-            with open(SANDBOX_DIR + '/graph.txt' , "w") as graphfile:
-                graphfile.write(dGraph.replace("\\n", "\n")[1:])
+            dGraph = getDGraphsFromOutput(stdout)
+            with open(SANDBOX_DIR + '/graph_all.txt' , "w") as graphfile:
+                graphfile.write(str(dGraph.replace("\\n", "\n")[0:]))
             
             
             to_check = str(stderr).split("\\n")
@@ -296,7 +319,7 @@ def test_1(updated_file_name):
                '--model-checker-solvers=smtlib2', 
                '--model-checker-engine=chc', 
                "--model-checker-print-query",
-               "--model-checker-ext-calls=trusted",
+            #    "--model-checker-ext-calls=trusted",
                updated_file_name]
     command_executer_err(command, 120, SANDBOX_DIR + '/log_test.txt', SANDBOX_DIR + '/help.txt')
     
@@ -312,7 +335,7 @@ def run_solcmc(updated_file_name, contract_name):
     command = ["./docker_solcmc_updated", "tmp", basename,
                 contract_name, str(10), SOLVER_TYPE]#, '>', smt_name]
     source = ('tmp/'  + updated_file_name.split('tmp/')[1])
-    command_2 = [COMP_PATH, '--model-checker-solvers=smtlib2', '--model-checker-engine=chc', "--model-checker-print-query", 
+    command_2 = [COMP_PATH, '--model-checker-solvers=smtlib2', '--model-checker-engine=chc', "--model-checker-print-query",
                 updated_file_name]
     smt2_list = command_executer_comp(command_2, TIMEOUT, CORE+"log.txt", contract_name)
     # smt2_list = command_executer_docker_solcmc(command, TIMEOUT, CORE+"log.txt")
@@ -497,8 +520,14 @@ def run_tg(file, signature):
     basename = os.path.basename(file)
     smt_name = os.path.splitext(basename)[0] + "_updated.smt2"
     # smt_name = os.path.splitext(basename)[0] + "_wo_adt.smt2"
+    graph_file_all = SANDBOX_DIR + '/' + 'graph_all.txt'
+    contract_name = find_contract_name(signature)
+    dgraph = getDGraphFromOutput(graph_file_all, contract_name)
+    graph_contract = SANDBOX_DIR + '/' + f'graph_{contract_name}.txt'
+    with open(graph_contract , "w") as graphfile:
+        graphfile.write(str(str(dgraph).replace("\\n", "\n")[1:]))
     new_smt_file_name = SANDBOX_DIR + "/" + smt_name
-    graph_file_name = SANDBOX_DIR + "/" + 'graph.txt'
+    graph_file_name = graph_contract
     print("run TG with".format(new_smt_file_name))
     logger(SANDBOX_DIR + '/log.txt', "run TG with".format(new_smt_file_name))
     signature_for_tg = convert_for_tg(signature)

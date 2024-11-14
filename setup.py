@@ -24,7 +24,7 @@ setup(
         'my_package': ['./deps/*'],
     },
     # Or for distribution-wide resources
-    data_files=[('deps', ['deps/tgnonlin', 'deps/tgnonlin_linux', 'deps/run_solcmc', 'deps/docker_solcmc_updated'])],
+    data_files=[('deps', ['deps/tgnonlin', 'deps/tgnonlin_linux', 'deps/run_solcmc', 'deps/docker_solcmc_updated', 'deps/solc'])],
     entry_points={
         'console_scripts': [
             'solTg=solTg.RunAll:main',
