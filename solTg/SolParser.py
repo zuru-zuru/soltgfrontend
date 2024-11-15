@@ -85,6 +85,14 @@ class SolParser:
         n_of_contracts = len(data['nodes'])
         print("number of contracts: {}".format(n_of_contracts))
         out = []
+        
+        contracts_from_id = {}
+        for n in data['nodes']:
+            if n['nodeType'] != "ContractDefinition":
+                continue
+            id = n['id']
+            contracts_from_id[id] = n
+
         for n in data['nodes']:
             if n['nodeType'] != "ContractDefinition":
                 continue
@@ -108,9 +116,20 @@ class SolParser:
             print(for_one_contract)
             f_c = n['nodes']
             # print("Node: ", f_c)
+            f_c = []
+            for basecontract_id in n["linearizedBaseContracts"]:
+                f_c = f_c + contracts_from_id[basecontract_id]['nodes']
+            
+            selectors_found = []
             for fc in f_c:
                 if 'kind' not in fc:
                     continue
+                selector = fc["functionSelector"]
+                
+                if selector in selectors_found:
+                    continue
+                selectors_found.append(selector)
+                
                 f_name = fc['name']
                 f_kind = fc['kind']
                 f_id = fc['id']
