@@ -335,7 +335,10 @@ def run_solcmc(updated_file_name, contract_name):
     command = ["./docker_solcmc_updated", "tmp", basename,
                 contract_name, str(10), SOLVER_TYPE]#, '>', smt_name]
     source = ('tmp/'  + updated_file_name.split('tmp/')[1])
-    command_2 = [COMP_PATH, '--model-checker-solvers=smtlib2', '--model-checker-engine=chc', "--model-checker-print-query",
+    command_2 = [COMP_PATH, '--model-checker-solvers=smtlib2', 
+                '--model-checker-engine=chc', 
+                "--model-checker-print-query",
+                # '--model-checker-ext-calls=trusted',
                 updated_file_name]
     smt2_list = command_executer_comp(command_2, TIMEOUT, CORE+"log.txt", contract_name)
     # smt2_list = command_executer_docker_solcmc(command, TIMEOUT, CORE+"log.txt")
