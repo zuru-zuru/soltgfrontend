@@ -201,12 +201,33 @@ class TestWrapper:
                             sender = 0
                             if ',' in constructor_args_values:
                                 end = constructor_args_values.index(',')
-                                sender = constructor_args_values[:end]
+                                sender = constructor_args_values[2:end]
                             else:
                                 end = constructor_args_values.index(')')-1
-                                sender = constructor_args_values[:end+1]
-                            constructor_args_values = '(' + constructor_args_values[end + 1:]
+                                sender = constructor_args_values[2:end+1]
+                            sender = hex(int(sender))
+                            sender = to_checksum_address(sender.ljust(42, '0').upper()[2:])
+                            # constructor_args_values = '(' + constructor_args_values[end + 1:]
+                            # changed
+                            constructor_args_values =  constructor_args_values[end + 1:-1]
+                            params = constructor_args_values.split(',')
+                            init_ch = 10
+                            index_p = 0
+                            while len(constructor_signature) > init_ch:
+                                if(constructor_signature[init_ch - 1] == 'address'):
+                                    params[index_p] = hex(int(params[index_p]))
+                                    print("OLD LEN: ", len(str(params[index_p])))
+                                    params[index_p] = to_checksum_address(params[index_p].ljust(42, '0').upper()[2:])
+                                    # params[index_p]= '0x' + params[index_p]
+                                    print("NEW PARAMS: ", params[index_p])
+                                if(constructor_signature[init_ch - 1] == 'string'):
+                                    params[index_p] = params[index_p].split("=")[1]
+                                index_p+=1
+                                init_ch+=2
+                            constructor_args_values = '(' + ','.join(params) + ')'
+                            #changed 
                         tt.split('_')
+                        setUp.append("\t\tvm.prank("+sender+");\n")
                         setUp.append("\t\t{} = new {}{};\n".format(contract_vars[i], c_name, constructor_args_values))
                         print("Set up:", setUp)
                         break
@@ -284,10 +305,10 @@ class TestWrapper:
                     print("Value:", value)
                     print("Sender:", sender)
                     ucall = f_name + args
-                    if(str(sender) == "0x0000000000000000000000000000000000000000"):
-                        sender = random.randint(1000000000, 100000000000000000000)
-                        sender = hex(int(sender))
-                        sender = to_checksum_address(sender.ljust(42, '0').upper()[2:])
+                    # if(str(sender) == "0x0000000000000000000000000000000000000000"):
+                    #     sender = random.randint(1000000000, 100000000000000000000)
+                    #     sender = hex(int(sender))
+                    #     sender = to_checksum_address(sender.ljust(42, '0').upper()[2:])
                     test_body.append("\t\tvm.prank("+sender+");\n")
                     if(int(value) > 0):
                         test_body.append("\t\tvm.deal("+sender+", " + str(value) +" wei );\n")

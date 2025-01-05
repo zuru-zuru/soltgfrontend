@@ -124,7 +124,13 @@ class SolParser:
             for fc in f_c:
                 if 'kind' not in fc:
                     continue
-                selector = fc["functionSelector"]
+                selector = ''
+                try:
+                    selector = fc["functionSelector"]
+                except:
+                    print('error functionselector\n')
+                    print(fc)
+                    exit
                 
                 if selector in selectors_found:
                     continue
