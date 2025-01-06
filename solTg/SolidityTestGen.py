@@ -598,6 +598,42 @@ def generate_stub(file_name, signature):
     test_file.writelines(out)
     test_file.close()
 
+# def run_test(file, signature):
+#     global  SANDBOX_DIR
+#     basename = os.path.basename(file)
+#     new_name = SANDBOX_DIR + "/" + basename
+#     print("Run tests for: {} ".format(new_name))
+#     save = os.getcwd()
+#     # get test from log
+#     # generate_stub(basename, signature)
+#     # copy source file to "scr"
+#     local_path = os.getcwd()
+#     print(local_path + "/src/" + basename)
+#     print(f"Source file path", file)
+#     # shutil.copyfile(file, local_path + "/src/" + basename)
+#     #run command:  forge test --match name
+#     SANDBOX_DIR = os.path.abspath(SANDBOX_DIR)
+#     logger(SANDBOX_DIR + "/log.txt", "new signature" + str(signature))
+#     #os.chdir("../")
+#     os.chdir(local_path)
+#     command_executer([FORGE_PATH, 'clean'], 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/log.txt")
+#     command = [FORGE_PATH, 'test',  str(os.path.splitext(basename)[0])]
+#     command_executer(command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/test_results.txt")
+#     command = [FORGE_PATH, 'coverage',  str(os.path.splitext(basename)[0]), '--report', 'lcov']
+#     command_executer(command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/test_results.txt")
+#     command = [FORGE_PATH, 'coverage', str(os.path.splitext(basename)[0]), '--report', 'summary']
+#     command_executer(command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/test_results.txt")
+#     #copy lcov file
+#     if os.path.isfile("lcov.info"):
+#         shutil.move("lcov.info", SANDBOX_DIR + "/lcov.info")
+#         genhtml_report_command = ['genhtml', '--branch-coverage', '--output', SANDBOX_DIR + '/generated-coverage', SANDBOX_DIR + "/lcov.info"]
+#         command_executer(genhtml_report_command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/log.txt")
+#     os.chdir(save)
+#     #os.remove("../src/" + basename)
+#     # clean_dir(local_path + "/src")
+#     shutil.move(local_path + "/test/" + os.path.splitext(basename)[0] + ".t.sol",
+#                 SANDBOX_DIR + "/" + os.path.splitext(basename)[0] + ".t.sol")
+#     # clean_dir(local_path + "/test")
 
 def run_test(file, signature):
     global  SANDBOX_DIR
@@ -625,7 +661,9 @@ def run_test(file, signature):
     command = [FORGE_PATH, 'coverage', str(os.path.splitext(basename)[0]), '--report', 'summary']
     command_executer(command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/test_results.txt")
     #copy lcov file
+    print(os.getcwd())
     if os.path.isfile("lcov.info"):
+        print("hello")
         shutil.move("lcov.info", SANDBOX_DIR + "/lcov.info")
         genhtml_report_command = ['genhtml', '--branch-coverage', '--output', SANDBOX_DIR + '/generated-coverage', SANDBOX_DIR + "/lcov.info"]
         command_executer(genhtml_report_command, 60, SANDBOX_DIR + "/log.txt", SANDBOX_DIR + "/log.txt")

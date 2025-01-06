@@ -203,7 +203,7 @@ class html_report:
             if len(report_dir) != 1:
                 return "<font color=\"red\">{}</font>\n".format('no report')
             else:
-                file_name = report_dir[0] + '/' + os.path.basename(dir) +'.sol.gcov.html'
+                file_name = report_dir[0] + '/src/' + os.path.basename(dir) +'.sol.gcov.html'
                 out = "<a href=\"{0}\">{1} </a>\n".format(file_name, "coverage_c_file_TG") + '<br/>\n'
                 out += html_report.read_lcov_html_report(file_name) + '<br/>'
                 return out
@@ -240,7 +240,7 @@ class html_report:
             if len(report_dir) != 1:
                 return 'no report'
             else:
-                file_name = report_dir[0] + '/' + os.path.basename(dir) +'.sol.gcov.html'
+                file_name = report_dir[0] + '/src/' + os.path.basename(dir) +'.sol.gcov.html'
                 out = html_report.read_lcov_html_report_plane_text(file_name)
                 return out
 
@@ -277,7 +277,7 @@ class html_report:
             if len(report_dir) != 1:
                 return 'no report'
             else:
-                file_name = report_dir[0] + '/' + os.path.basename(dir) +'.sol.gcov.html'
+                file_name = report_dir[0] + '/src/' + os.path.basename(dir) +'.sol.gcov.html'
                 out = html_report.read_lcov_html_report_plane_text_function_number(file_name)
                 return out
 
@@ -396,8 +396,9 @@ class html_report:
             coverage = ""
             if raw_data != "no data" and raw_data != 'no report':
                 raw_data = [r.strip("\n") for r in raw_data]
-                coverage = raw_data[3].strip("%")
-                hit = float(raw_data[1])
+                coverage = raw_data[1].strip("%")
+                print(raw_data)
+                hit = float(raw_data[3])
                 total = float(raw_data[2])
             else:
                 coverage = 0
