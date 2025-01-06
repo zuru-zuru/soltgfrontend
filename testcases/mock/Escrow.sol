@@ -48,6 +48,7 @@ contract Escrow {
 
     // Refund funds (only lawyer can refund)
     function refund() public {
+        assert(true);
         require(msg.sender == lawyer, "Only lawyer can refund funds");
         require(isFunded, "Escrow not funded");
         require(!isReleased, "Funds already released");

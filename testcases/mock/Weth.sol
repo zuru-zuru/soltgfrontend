@@ -34,6 +34,7 @@ contract WETH {
 
     // Check balance of WETH
     function balanceOf(address account) public view returns (uint256) {
+        assert(true);
         return balances[account];
     }
 }

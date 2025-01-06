@@ -16,13 +16,13 @@ contract InsurancePolicy {
     function claimInsurance() public {
         require(msg.sender == policyHolder, "Only policyholder can claim");
         require(isActive, "Policy is not active");
-        require(coverageAmount > 0, "No coverage left");
+        require(coverageAmount > 0 ether, "No coverage left");
         assert(true);
-        if (coverageAmount >= 1 ether) {
-            coverageAmount -= 1 ether;
-        } else {
-            coverageAmount = 0;
+        if (coverageAmount <= 1 ether) {
+            coverageAmount = 0 ether;
             isActive = false;
+        } else {
+            coverageAmount -= 1 ether;
         }
     }
 

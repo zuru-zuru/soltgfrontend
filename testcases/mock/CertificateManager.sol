@@ -41,6 +41,7 @@ contract CertificateManager {
 
     // Deactivate the certification system
     function deactivateSystem() public {
+        assert(true);
         require(msg.sender == admin, "Only admin can deactivate the system");
         require(isActive, "System is already inactive");
 
