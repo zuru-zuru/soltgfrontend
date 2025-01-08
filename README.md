@@ -1,3 +1,5 @@
+**This work builds upon the original implementation of solTg by Konstantin Britikov.**
+
 Follow instructions in README_original.md to install dependencies. 
 
 ## Modified tgnonlin and solc
@@ -34,10 +36,10 @@ Fixed this error for me.
 Run the tool using the following command
 
 ```
-`python3 ./solTg/RunAll.py -i <input file/dir>`
+`python3 ./solTg/RunAll.py -i <input file/dir>` -t <timeout in seconds>
 ```
 
-Added -t flag to pass timeout in seconds.
+The contract to be analysed must not be an abstract contract and its code must contain an assert in order for SolCMC to generate its CHC encoding. SolTG will notify the user if the encoding fails to generate.
 
 
 

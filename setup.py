@@ -8,9 +8,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name='solTg',
+    name='solTg-plus',
     python_requires='>3.5.2',
-    version='0.1.2',
+    version='0.1.3',
     packages=find_packages(),
     include_package_data=True,  # This tells setuptools to include files listed in MANIFEST.in
     author = "Konstantin Britikov",
@@ -24,10 +24,10 @@ setup(
         'my_package': ['./deps/*'],
     },
     # Or for distribution-wide resources
-    data_files=[('deps', ['deps/tgnonlin', 'deps/run_solcmc', 'deps/solc'])],
+    data_files=[('deps', ['deps/tgnonlin', 'deps/solc'])],
     entry_points={
         'console_scripts': [
-            'solTg=solTg.RunAll:main',
+            'solTg-plus=solTg.RunAll:main',
         ],
     },
 )
