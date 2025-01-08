@@ -327,14 +327,14 @@ def test_1(updated_file_name):
 def run_solcmc(updated_file_name, contract_name):
     # ./docker_solcmc examples smoke_safe.sol Smoke 30 z3
     os.chdir(CORE)
-    shutil.copy(SOLCMC + "run_solcmc", "./run_solcmc")
-    shutil.copy(SOLCMC + "docker_solcmc_updated", "./docker_solcmc_updated")
+    # shutil.copy(SOLCMC + "run_solcmc", "./run_solcmc")
+    # shutil.copy(SOLCMC + "docker_solcmc_updated", "./docker_solcmc_updated")
     basename = os.path.basename(updated_file_name)
     smt_name = os.path.splitext(basename)[0] + '.smt2'
     print("Running solcmc")
-    command = ["./docker_solcmc_updated", "tmp", basename,
-                contract_name, str(10), SOLVER_TYPE]#, '>', smt_name]
-    source = ('tmp/'  + updated_file_name.split('tmp/')[1])
+    # command = ["./docker_solcmc_updated", "tmp", basename,
+    #             contract_name, str(10), SOLVER_TYPE]#, '>', smt_name]
+    # source = ('tmp/'  + updated_file_name.split('tmp/')[1])
     command_2 = [COMP_PATH, '--model-checker-solvers=smtlib2', 
                 '--model-checker-engine=chc', 
                 "--model-checker-print-query",
@@ -346,8 +346,8 @@ def run_solcmc(updated_file_name, contract_name):
     print("Output:", smt2_list)
     if not smt2_list:
         return "F"
-    os.remove(CORE + "run_solcmc")
-    os.remove(CORE + "docker_solcmc_updated")
+    # os.remove(CORE + "run_solcmc")
+    # os.remove(CORE + "docker_solcmc_updated")
     return smt2_list
 
 
@@ -563,7 +563,7 @@ def generate_stub(file_name, signature):
     out = ["//Generated Test by TG\n", "//{}\n".format(str(signature)),
            "pragma solidity ^0.8.13;\n\n",
            "import \"forge-std/Test.sol\";\n",
-           "import \"../src/{}.sol\";\n\n".format(name_wo_extension),
+           "import \"./{}.sol\";\n\n".format(name_wo_extension),
            f'contract {name_wo_extension}_Test is Test' + ' {\n']
 
     # contracts declaration
@@ -647,7 +647,9 @@ def run_test(file, signature):
     local_path = os.getcwd()
     print(local_path + "/src/" + basename)
     os.makedirs(local_path + "/src/", exist_ok=True)
-    shutil.copyfile(file, local_path + "/src/" + basename)
+    file_src_all = SANDBOX_DIR + "/" + basename
+    shutil.copyfile(file_src_all, local_path + "/src/" + basename)
+    print(f"Path to file:{file_src_all}")
     #run command:  forge test --match name
     SANDBOX_DIR = os.path.abspath(SANDBOX_DIR)
     logger(SANDBOX_DIR + "/log.txt", "new signature" + str(signature))
