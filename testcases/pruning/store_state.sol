@@ -8,7 +8,7 @@ contract Storage {
 
     function balanceCheck() public view returns (bool) {
         if(balances[msg.sender] > 1000){
-            assert(UNIQUE_STATE_VAR > 1000);
+            assert(true);
             return true;
         } else {
             return false;

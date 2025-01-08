@@ -5,7 +5,7 @@ contract Storage {
 
     uint x;
 
-    function test() public view returns (bool) {
+    function check() public view returns (bool) {
         assert(true);
         if (x > 2) {
             return true;

@@ -1,4 +1,4 @@
-contract Test {
+contract Struct {
 	struct vector {
         uint x;
         uint y;
@@ -25,7 +25,7 @@ contract Test {
         coords.z += i;
     }
 
-    function test() public returns (bool) {
+    function check() public returns (bool) {
         assert(true);
         if (coords.x == 5 && coords.y == 3 && coords.z == 4) {
             return true;
