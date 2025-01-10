@@ -13,7 +13,7 @@ contract Storage1 {
 
 contract Storage2 is Storage1 {
 
-    function test() public view returns (bool) {
+    function check() public view returns (bool) {
         assert(true);
         if (x > 2) {
             return true;
