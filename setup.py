@@ -18,8 +18,8 @@ setup(
     description = "Test generation for Solidity in Foundry format (https://github.com/foundry-rs/foundry).",
     long_description = long_description,
     long_description_content_type = "text/markdown",
-    url = "https://github.com/zuru-zuru/soltgbackend"
-    license = "GPL-3.0-only"
+    url = "https://github.com/zuru-zuru/soltgbackend",
+    license = "GPL-3.0-only",
     
     # If needed, specify explicit paths
     install_requires=read_requirements(),
