@@ -10,7 +10,7 @@ with open("README.md", "r") as fh:
 setup(
     name='solTg-plus',
     python_requires='>3.5.2',
-    version='0.1.3',
+    version='0.2.1',
     packages=find_packages(),
     include_package_data=True,  # This tells setuptools to include files listed in MANIFEST.in
     author = "Konstantin Britikov",
@@ -18,6 +18,9 @@ setup(
     description = "Test generation for Solidity in Foundry format (https://github.com/foundry-rs/foundry).",
     long_description = long_description,
     long_description_content_type = "text/markdown",
+    url = "https://github.com/zuru-zuru/soltgbackend"
+    license = "GPL-3.0-only"
+    
     # If needed, specify explicit paths
     install_requires=read_requirements(),
     package_data={

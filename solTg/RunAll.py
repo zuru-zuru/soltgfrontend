@@ -12,12 +12,12 @@ from solTg.ReportBuilder import html_report
 
 
 def init():
-    global SOURCE_PATH, SANDBOX_DIR, OUTPUTDIR
+    global SOURCE_PATH, SANDBOX_DIR, OUTPUTDIR, TIMEOUT
     # tmp = os.path.dirname(os.path.dirname((os.path.dirname(os.path.realpath(__file__)))))
     tmp = os.getcwd()
     SANDBOX_DIR = tmp + "/sandbox"
     OUTPUTDIR = tmp + "/test"
-
+    TIMEOUT = 120
 
 def clean_dir(dir):
     for root, dirs, files in os.walk(dir):
@@ -159,14 +159,14 @@ def main():
     insourse = ['-i', '--input_source']
     kwsourse = {'type': str, 'help': 'Input .sol-file. or directory with .sol-files'}
 
-    outdir = ['-o', '--output_dir']
-    kwoutdir = {'type': str, 'help': 'Output direcory name. Default: OUTPUTDIR = ../testgen_output.'}
+    # outdir = ['-o', '--output_dir']
+    # kwoutdir = {'type': str, 'help': 'Output direcory name. Default: OUTPUTDIR = ../testgen_output.'}
     
     timeout = ['-t', '--timeout']
     kwtimeout = {'type': int, 'help': 'integer time in seconds. Default: 120'}
 
     parser.add_argument(*insourse, **kwsourse)
-    parser.add_argument(*outdir, **kwoutdir)
+    # parser.add_argument(*outdir, **kwoutdir)
     parser.add_argument(*timeout, **kwtimeout)
     kwcov = {'type': bool, 'help': 'true - rerun / false - continue. Default: true.'}
     parser.add_argument('--rerun', **kwcov)
@@ -213,15 +213,15 @@ def main():
         TIMEOUT = args.timeout
         print(f"timeout set to {TIMEOUT}")
     
-    if args.output_dir is not None:
-        print('sandoutput dir set to {}'.format(args.output_dir))
-        OUTPUTDIR = args.output_dir
+    # if args.output_dir is not None:
+    #     print('sandoutput dir set to {}'.format(args.output_dir))
+    #     OUTPUTDIR = args.output_dir
 
     for f in files:
         print(f)
     main_pipeline(files)
     html_report.buildReport(OUTPUTDIR)
-    html_report.build_excel_report(OUTPUTDIR)
+    # html_report.build_excel_report(OUTPUTDIR)
     clean_dir(SANDBOX_DIR)
     os.rmdir(SANDBOX_DIR)
     # html_report.buildReport_Excel_klee(SANDBOX_DIR)
