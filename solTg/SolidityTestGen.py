@@ -513,7 +513,7 @@ def convert_for_tg(signature):
             function_id = f[1]
             var_names = [e for i, e in enumerate(f[2:]) if i % 2 == 1]
             var_str = ','.join(var_names)
-            out.append("{}__{}:{}".format(function_name, function_id, var_str))
+            out.append("{}_{}:{}".format(function_name, function_id, var_str))
 
     return '^'.join(out)
 
