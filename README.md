@@ -74,7 +74,7 @@ pip install .
 ```
 ---
 #### **Foundry dependency**
-For foundry to generate the coverage report, forge-std must be present inside ```./lib/forge-std``` in the current directory. This can be installed by running:
+For foundry to generate the coverage report, forge-std must be present inside ```./lib/forge-std``` in the current directory. This can be installed by running: (need to be inside a git repo to run this)
 ```
 forge install foundry-rs/forge-std --no-commit
 ```
